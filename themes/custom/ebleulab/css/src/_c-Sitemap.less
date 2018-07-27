@@ -1,0 +1,48 @@
+
+/*################################*\
+    legacy  |  _c-Sitemap.less
+\*################################*/
+@import (reference) url('../../node_modules/xmeter/css/src/__settings.less');
+@import (reference) url('../../node_modules/xmeter/css/src/__tool.fontsize.less');
+@import (reference) url('../../node_modules/xmeter/css/src/_h-FontSize.less');
+@import (reference) url('../../node_modules/xmeter/css/src/_-mb.less');
+
+
+// The Site Map
+//
+// Footer navigation.
+// Shown on desktop so users don’t have to scroll to top nav.
+// Also shown on mobile as a fallback for the Javascript mobile menu.
+// <header><dl>
+//   <dt>author</dt>  <dd>Chris Harvey</dd>
+//   <dt>updated</dt> <dd><time>2017-06-12</time></dd>
+// </dl></header>
+//
+// Markup:
+// <div class="c-ConferenceTitles">
+// </div>
+//
+// Weight: 11
+//
+// Styleguide Components.Sitemap
+.c-Sitemap {
+  font-weight: 600;
+  text-transform: uppercase;
+  @media (min-width: 75em) {
+    .font-size-mod(@g-font-size-kilo);
+  }
+}
+
+.c-Sitemap__Item {
+  .-mb-1;
+}
+
+.c-Sitemap__Sub {
+  font-weight: 300;
+  .h-FontSize;
+  --font-scale: @g-font-size-mill;
+  @media (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .font-size-el(@g-font-size-mill);
+  }
+  text-transform: none; // override Sitemap
+}

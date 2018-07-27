@@ -1,0 +1,39 @@
+
+/*################################*\
+    legacy  |  _o-MobileBar.less
+\*################################*/
+
+
+// Mobile Bar
+//
+// Top bar on mobile devices.
+// Contains home button and hamburger menu button.
+// <header><dl>
+//   <dt>author</dt>  <dd>Chris Harvey</dd>
+//   <dt>updated</dt> <dd><time>2017-08-10</time></dd>
+// </dl></header>
+//
+// Markup:
+// <div class="o-MobileBar">
+// </div>
+//
+// Weight: 4
+//
+// Styleguide Objects.MobileBar
+.o-MobileBar {
+  justify-content: flex-end;
+}
+.o-MobileBar__Item {
+  flex: none;
+  padding: (0.5 * 1.5rem) 1rem;        // COMBAK:FALLBACK
+  padding: calc(0.5 * var(--lh)) 1rem; // COMBAK:FALLBACK
+  padding: 0.5lh 1rem;
+  &,
+  &:hover,
+  &:focus {
+    color: inherit; // unset `a`
+  }
+  .glyphicons {
+    line-height: inherit; // undo dev glyphicons; make room for glyphicons in mobile bar
+  }
+}

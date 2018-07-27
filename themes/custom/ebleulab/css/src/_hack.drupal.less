@@ -1,0 +1,25 @@
+
+/*################################*\
+    legacy  |  _hack.drupal.less
+\*################################*/
+
+
+// Drupal fixes go here. Styles that fix Drupal UI (Seven theme).
+///////////////////////////////////////////////////////////////////////////////
+
+.toolbar-icon-admin-toolbar-tools-help::before {
+  box-sizing: content-box;
+  box-sizing: border-box;
+  box-sizing: unset;
+}
+
+// `/core/themes/stable/css/toolbar/toolbar.theme.css` is getting overridden by `a[href]` in base
+.toolbar-tray a[href] {
+  color: #565656;
+  &:hover,
+  &:active,
+  &:focus,
+  &.is-active {
+    color: #000;
+  }
+}

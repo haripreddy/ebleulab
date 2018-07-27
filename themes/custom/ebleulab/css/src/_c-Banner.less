@@ -1,0 +1,68 @@
+
+/*################################*\
+    legacy  |  _c-Banner.less
+\*################################*/
+@import (reference) url('__settings.less');
+@import (reference) url('__tool.buttonText.less');
+
+
+// Banners
+//
+// A site region with full-bleed background color or image.
+// <header><dl>
+//   <dt>author</dt>  <dd>Chris Harvey</dd>
+//   <dt>updated</dt> <dd><time>2017-07-24</time></dd>
+// </dl></header>
+//
+// Markup:
+// <div class="c-Banner {{ modifier_class }}">
+// </div>
+//
+// .c-Banner--head      - masthead in header
+// .c-Banner--nav       - top-level navigation
+// .c-Banner--nav--sub  - secondary-level navigation
+// .c-Banner--copyright - copyright line footer
+//
+// Weight: 1
+//
+// Styleguide Components.Banner
+.c-Banner {
+  color: @g-color-banner-txt;
+}
+.c-Banner--head {
+  background-color: var(--color-primary, @g-color-primary);
+}
+.c-Banner--nav {
+  background-color: var(--color-secondary, @g-color-secondary);
+}
+.c-Banner--nav--sub {
+  position: absolute;
+  left: 0; right: 0;
+  z-index: 1; // display on top of relatively-positioned contextual regions while logged into Drupal
+  transform-origin: top;
+  background-color: var(--color-accent, @g-color-accent);
+  transition: transform 100ms;
+  &:not(.active) {
+    transform: scale(1,0);
+  }
+}
+.c-Banner--copyright {
+  // TODO make this a separate object, like `.o-Flex--center`
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0;       // COMBAK:FALLBACK
+  margin-bottom: initial; // COMBAK:FALLBACK
+  margin-bottom: unset;   // COMBAK:FALLBACK
+  margin-block-end: unset; // override base `p`
+  padding: 1.5rem 1rem;    // COMBAK:FALLBACK
+  padding: var(--lh) 1rem; // COMBAK:FALLBACK
+  padding: 1lh 1rem;
+  background-color: @g-color-asce-blue;
+  @media (-ms-high-contrast: none), (-ms-high-contrast: active) { // COMBAK:FALLBACK:IE
+    display: block; // override .o-Flex
+    text-align: center;
+  }
+  & > .o-Flex__Item {
+    flex: none;
+  }
+}

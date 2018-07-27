@@ -1,0 +1,317 @@
+<?php
+
+/**
+ * HTML Variables
+ */
+
+/*function ebleulab_preprocess_html(&$variables) {
+$variables['html_developer_class']   = theme_get_setting('developer_class');
+$variables['html_developer_channel'] = theme_get_setting('developer_branch');
+$variables['html_colors_primary']   = theme_get_setting('colors_primary');
+$variables['html_colors_secondary'] = theme_get_setting('colors_secondary');
+$variables['html_colors_accent']    = theme_get_setting('colors_accent');
+
+$asset_channel = theme_get_setting('developer_branch');
+
+// Determine which library to use; see `ebleulab.libraries.yml`
+$variables['#attached']['library'][] = (!empty($asset_channel)) ?
+    array(
+        1 => 'ebleulab/channel-prod',
+        2 => 'ebleulab/channel-stage',
+        3 => 'ebleulab/channel-dev',
+        4 => 'ebleulab/channel-canary',
+    )[$asset_channel]
+    : 'ebleulab/channel-stage';
+}*/
+
+/**
+ * Page Variables
+ */
+/*function ebleulab_preprocess_page(&$variables) {
+    $variables['page_name']              = theme_get_setting('conference_info_name');
+    $variables['page_theme']             = theme_get_setting('conference_info_theme');
+    $variables['page_startdate']         = theme_get_setting('conference_dates_start');
+    $variables['page_enddate']           = theme_get_setting('conference_dates_end');
+    $variables['page_location_display']  = theme_get_setting('conference_location_display');
+    $variables['page_location_advisory'] = theme_get_setting('conference_location_advisory');
+    if (theme_get_setting('images_banner')) {
+        foreach (theme_get_setting('images_banner') as $image) {
+            $fullpath = (file_load($image) == NULL) ? '/themes/custom/ebleulab/images/banner-default.jpg' : file_create_url(file_load($image)->getFileUri());
+            //     //   ^^^^^^^^^^^^^^^^^^^^^^^^^^^ if setting path exists but no file exists at that path
+            $variables['page_images_banner'] = parse_url($fullpath, PHP_URL_PATH);
+        }
+    } else {
+        $variables['page_images_banner'] = '/themes/custom/ebleulab/images/banner-default.jpg';
+    }
+}*/
+
+/**
+ * Block Variables
+ */
+/*function ebleulab_preprocess_block(&$variables) {
+    $variables['block_name']              = theme_get_setting('conference_info_name');
+    $variables['block_theme']             = theme_get_setting('conference_info_theme');
+    $variables['block_startdate']         = theme_get_setting('conference_dates_start');
+    $variables['block_enddate']           = theme_get_setting('conference_dates_end');
+    $variables['block_location_display']  = theme_get_setting('conference_location_display');
+    $variables['block_location_advisory'] = theme_get_setting('conference_location_advisory');
+
+    // for site logo (shield) in footer tabs
+    $variables['block_sitelogo'] = theme_get_setting('logo.url');
+    // IDEA use `'/' . drupal_get_path('theme','ebleulab') . '/logo.svg'` for Institute drop-down selector
+
+    if (theme_get_setting('secondary_logo')) {
+        foreach (theme_get_setting('secondary_logo') as $image) {
+            $fullpath = file_create_url(file_load($image)->getFileUri());
+            $variables['block_secondarylogo'] = parse_url($fullpath, PHP_URL_PATH);
+        }
+    }
+}*/
+
+/**
+ * Region Variables
+ */
+/*function ebleulab_preprocess_region(&$variables) {
+    $variables['region_name']              = theme_get_setting('conference_info_name');
+    $variables['region_theme']             = theme_get_setting('conference_info_theme');
+    $variables['region_startdate']         = theme_get_setting('conference_dates_start');
+    $variables['region_enddate']           = theme_get_setting('conference_dates_end');
+    $variables['region_location_display']  = theme_get_setting('conference_location_display');
+    $variables['region_location_advisory'] = theme_get_setting('conference_location_advisory');
+}*/
+
+// function buildForm(array $form, FormStateInterface $form_state, $theme =
+//        // Process the theme and all its base themes.
+//        foreach ($theme_keys as $theme) {
+//          // Include the theme-settings.php file.
+//         $filename = DRUPAL_ROOT . '/' . $themes[$theme]->getPath() . '/theme-settings.php';
+//         if (file_exists($filename)) {
+//           require_once $filename;
+//         $theme_settings_file = drupal_get_path('theme', $theme) . '/theme-settings.php';
+//         $theme_file = drupal_get_path('theme', $theme) . '/' . $theme . '.theme';
+//         $filenames = array($theme_settings_file, $theme_file);
+//         foreach ($filenames as $filename) {
+//           if (file_exists($filename)) {
+//             require_once $filename;
+//             $form_state->addBuildInfo('files', array($filename));
+//           }
+//          }
+
+function ebleulab_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state){
+  $theme_file = drupal_get_path('theme', 'ebleulab') . '/ebleulab.theme';
+  $build_info = $form_state->getBuildInfo();
+  if (!in_array($theme_file, $build_info['files'])) {
+    $build_info['files'][] = $theme_file;
+  }
+  $form_state->setBuildInfo($build_info);
+
+  $form['ebleulab_theme_settings'] = [
+    '#type'    => 'vertical_tabs',
+    '#parents' => ['ebleulab_theme_settings'],
+  ];
+
+  $form['theme_settings']['#group'] = 'ebleulab_theme_settings';
+  $form['image_settings']['#group'] = 'ebleulab_theme_settings';
+
+  /**
+   * Theme Settings Tab
+   */
+
+  $form['theme_settings'] = array(
+    '#type'        => 'details',
+    '#title'       => t('Site Information'),
+    '#group'       => 'ebleulab_theme_settings',
+    '#description' => t('Enter information about the website.'),
+    '#weight'      => -5
+  );
+  $form['theme_settings']['site_info'] = array(
+    '#type'   => 'fieldset',
+    '#title'  => t('Basic Information'),
+    '#weight' => -200,
+  );
+  $form['theme_settings']['site_info']['site_info_name'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Site Name'),
+    '#default_value' => theme_get_setting('site_info_name'),
+    '#description'   => t('Name of the Website, displayed in the header/footer.'),
+    '#required'      => TRUE,
+  );
+  $form['theme_settings']['site_info']['site_info_theme'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Website Theme'),
+    '#default_value' => theme_get_setting('site_info_theme'),
+    '#description'   => t('Website theme or tagline, displayed in the hero region.'),
+    '#required'      => FALSE,
+  );
+
+  $form['site_settings']['developer'] = array(
+    '#type'   => 'fieldset',
+    '#title'  => t('Developer Settings'),
+    '#weight' => -140,
+  );
+  $form['site_settings']['developer']['developer_class'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Body Class(es)'),
+    '#default_value' => theme_get_setting('developer_class'),
+    '#description'   => t('Add classes to the <code>&lt;body&gt;</code> tag. Multiple classes must be space-separated.'),
+  );
+  $form['site_settings']['developer']['developer_branch'] = array(
+    '#type'    => 'select',
+    '#title'   => t('Asset Channel'),
+    '#options' => array(
+      1 => t('production'),
+      2 => t('staging'),
+    ),
+    '#default_value' => theme_get_setting('developer_branch'),
+    '#description'   => t('Collection of assets to use on the site. <strong>Flush all caches after changing selection.</strong>'),
+  );
+
+  /**
+   * Conference Images Tab
+   */
+
+ /* $form['site_images'] = array(
+    '#type'        => 'details',
+    '#title'       => t('Images &amp; Colors'),
+    '#group'       => 'ebleulab_theme_settings',
+    '#description' => t('Upload conference images and colors.'),
+    '#weight'      => -4
+  );*/
+
+  $form['favicon']['#group']  = 'site_images';
+  $form['favicon']['#weight'] = -170;
+  $form['logo']['#group']     = 'site_images';
+  $form['logo']['#weight']    = -160;
+  $form['conference_images']['images'] = array(
+    '#type'   => 'fieldset',
+    '#title'  => t('Additional Images'),
+    '#weight' => -150,
+  );
+  $default_file_dir = 'public://site-images';
+  // $banner_folder = file_prepare_directory($default_file_dir, FILE_CREATE_DIRECTORY);
+
+  $form['conference_images']['images']['secondary_logo'] = array(
+    '#title'              => t('Secondary Logo'),
+    '#type'               => 'managed_file',
+    '#description'        => t('Optional secondary logo.'),
+    '#default_value'      => theme_get_setting('secondary_logo'),
+    '#progress_indicator' => 'bar',
+    '#progress_message'   => t('Please wait&hellip;'),
+    '#upload_location'    => $default_file_dir,
+    '#upload_validators'  => array(
+      'file_validate_extensions' => array('gif png jpg jpeg'),
+    ),
+    '#media_options' => array(
+      'global' => array(
+        'types' => array(
+          'image' => 'image',
+        ),
+        'schemes' => array(
+          'public' => 'public',
+        ),
+        'file_extensions' => 'png gif jpg jpeg',
+        'max_filesize'    => '4 MB',
+        'uri_scheme'      => 'public',
+      ),
+    ),
+  );
+
+  $form['conference_images']['images']['images_banner'] = array(
+    '#title'              => t('Banner Image'),
+    '#type'               => 'managed_file',
+    '#description'        => t('Background image in the top-right area of the banner.'),
+    '#default_value'      => theme_get_setting('images_banner'),
+    '#progress_indicator' => 'bar',
+    '#progress_message'   => t('Please wait&hellip;'),
+    '#upload_location'    => $default_file_dir,
+    '#upload_validators'  => array(
+      'file_validate_extensions' => array('gif png jpg jpeg'),
+    ),
+    '#media_options' => array(
+      'global' => array(
+        'types' => array(
+          'image' => 'image',
+        ),
+        'schemes' => array(
+          'public' => 'public',
+        ),
+        'file_extensions' => 'png gif jpg jpeg',
+        'max_filesize'    => '4 MB',
+        'uri_scheme'      => 'public',
+      ),
+    ),
+  );
+
+  $form['conference_images']['colors'] = array(
+    '#type'   => 'fieldset',
+    '#title'  => t('Site Colors'),
+    '#weight' => -140,
+    '#description' => t('Enter hex codes in <code>#rrggbb</code> format.'),
+  );
+  $form['conference_images']['colors']['colors_primary'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Primary Color'),
+    '#default_value' => theme_get_setting('colors_primary'),
+  );
+  $form['conference_images']['colors']['colors_secondary'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Secondary Color'),
+    '#default_value' => theme_get_setting('colors_secondary'),
+  );
+  $form['conference_images']['colors']['colors_accent'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Accent Color'),
+    '#default_value' => theme_get_setting('colors_accent'),
+  );
+
+  $form['#submit'][] = 'ebleulab_form_system_theme_settings_submit';
+}
+
+// function ebleulab_form_system_theme_settings_submit(&$form, \Drupal\Core\Form\FormStateInterface &$form_state, $form_id = NULL) {
+//   $banner_image_id = $form_state['values']['conference_settings']['conference_info']['banner_image'];
+//   $banner_image = \Drupal\file\Entity\File::load($banner_image_id);
+//
+//   // set status to permanent so that its not deleted
+//   $banner_image->setPermanent();
+//   $banner_image->save();
+// }
+
+function ebleulab_form_system_theme_settings_submit(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+  if ($form_state->getValue('images_banner')) {
+    $element = $form_state->getValue('images_banner');
+    if (!empty($element[0])){
+      // Make submited files permanent.
+      $file = \Drupal\file\Entity\File::load($element[0]);
+      $file->setPermanent();
+      $file->save();
+      $file_usage = \Drupal::service('file.usage');
+      $file_usage->add($file, 'ebleulab', 'file', $element[0]);
+    }
+  }
+  if ($form_state->getValue('secondary_logo')) {
+    $element = $form_state->getValue('secondary_logo');
+    if (!empty($element[0])){
+      // Make submited files permanent.
+      $file = \Drupal\file\Entity\File::load($element[0]);
+      $file->setPermanent();
+      $file->save();
+      $file_usage = \Drupal::service('file.usage');
+      $file_usage->add($file, 'ebleulab', 'file', $element[0]);
+    }
+  }
+}
+
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter() for form templates.
+ * Allows theming of block types.
+ * @see https://www.drupal.org/node/2460893
+ * @param array $suggestions
+ * @param array $variables
+ */
+
+/*function ebleulab_theme_suggestions_block_alter(array &$suggestions, array $variables) {
+  if (isset($variables['elements']['content']['#block_content'])) {
+    array_splice($suggestions, 1, 0, 'block__bundle__' . $variables['elements']['content']['#block_content']->bundle());
+  }
+}*/
